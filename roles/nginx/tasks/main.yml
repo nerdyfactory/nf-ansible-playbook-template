@@ -1,19 +1,21 @@
 ---
 - name: Define nginx_user.
   set_fact:
-    nginx_user: "{{ __nginx_user }}"
+  nginx_user: "{{ __nginx_user }}"
   when: nginx_user is not defined
   tags: nginx
 
 - name: Add application directory
   file: dest=/var/www/shopdogg.co.kr state=directory owner=shopdogg group=www-data mode=755
-  sudo: yes
+  become: yes
+  become_user: root
   when: env == 'production'
   tags: nginx
 
 - name: Update apt cache.
   apt: update_cache=yes cache_valid_time=86400
-  sudo: yes
+  become: yes
+  become_user: root
   tags: nginx
 
 - name: Ensure nginx is installed.
@@ -21,7 +23,8 @@
     pkg: nginx
     state: installed
     default_release: "{{ nginx_default_release }}"
-  sudo: yes
+  become: yes
+  become_user: root
   tags: nginx
 
 # Nginx setup.
@@ -32,7 +35,8 @@
     owner: root
     group: root
     mode: 0644
-  sudo: yes
+  become: yes
+  become_user: root
   notify: restart nginx
   tags: 
   - nginx
@@ -47,7 +51,8 @@
     path: "{{ nginx_default_vhost_path }}"
     state: absent
   when: nginx_remove_default_vhost
-  sudo: yes
+  become: yes
+  become_user: root
   notify: restart nginx
   tags:
   - nginx
@@ -59,7 +64,8 @@
     dest: "{{ nginx_vhost_path }}/vhosts.conf"
     mode: 0644
   when: nginx_vhosts
-  sudo: yes
+  become: yes
+  become_user: root
   notify: restart nginx
   tags:
   - nginx

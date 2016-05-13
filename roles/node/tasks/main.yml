@@ -15,28 +15,32 @@
   apt_key:
     url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
     state: present
-  sudo: yes
+  become: yes
+  become_user: root
   tags: node
 
 - name: Add NodeSource deb repository
   apt_repository:
     repo: 'deb https://deb.nodesource.com/node_{{ nodejs_version }} {{ ansible_distribution_release }} main'
     state: present
-  sudo: yes
+  become: yes
+  become_user: root
   tags: node
 
 - name: Add NodeSource deb-src repository
   apt_repository:
     repo: 'deb-src https://deb.nodesource.com/node_{{ nodejs_version }} {{ ansible_distribution_release }} main'
     state: present
-  sudo: yes
+  become: yes
+  become_user: root
   tags: node
 
 - name: Add NodeSource repository preferences
   template:
     src: etc/apt/preferences.d/deb_nodesource_com_node.pref.2
     dest: /etc/apt/preferences.d/deb_nodesource_com_node.pref
-  sudo: yes
+  become: yes
+  become_user: root
   tags: node
 
 - name: Install Node.js
@@ -45,11 +49,13 @@
       - nodejs
     state: installed
     update_cache: yes
-  sudo: yes
+  become: yes
+  become_user: root
   tags: node
 
 - name: Install global node modules
   npm: name={{item}} state=present global=yes
   with_items: nodejs_global_modules
-  sudo: yes
+  become: yes
+  become_user: root
   tags: npm

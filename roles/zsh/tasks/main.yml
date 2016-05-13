@@ -1,12 +1,14 @@
 ---
 - name: Install zsh
   apt: pkg=zsh
-  sudo: yes
+  become: yes
+  become_user: yes
   tags: zsh
 
 - name: Set zsh as default shell
   shell: chsh -s $(which zsh) {{user}}
-  sudo: yes
+  become: yes
+  become_user: yes
   tags: zsh
 
 - name: Install oh-my-zsh
