@@ -1,0 +1,15 @@
+description "redis server"
+
+start on runlevel 3
+stop on shutdown
+
+respawn
+
+script
+  echo $$ > /var/run/redis.pid
+  exec su -s /bin/sh -c 'exec "$0" "$@"' redis -- /usr/local/bin/redis-server /etc/redis/redis.conf  >>/var/log/redis/redis-server.log 2>&1
+end script
+
+post-stop script
+  rm -f /var/run/redis.pid
+end script

@@ -1,0 +1,9 @@
+---
+- hosts: vagrant
+  user: "{{user}}"
+  roles:
+  - role: common 
+  - role: nginx
+  - role: node
+  - role: redis
+  - role: zsh

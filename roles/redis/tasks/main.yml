@@ -1,0 +1,86 @@
+---
+- name: Download redis
+  get_url: "url=http://download.redis.io/releases/redis-{{redis.version}}.tar.gz dest=/tmp/redis-{{redis.version}}.tar.gz"
+  tags: redis
+
+- name: Unpack redis
+  command: /bin/tar xzf redis-{{redis.version}}.tar.gz chdir=/tmp/ creates=/tmp/redis-{{redis.version}}
+  tags: redis
+
+- name: build redis
+  command: "/usr/bin/make chdir=/tmp/redis-{{redis.version}}"
+  tags: redis
+
+- name: install redis
+  command: /usr/bin/make install chdir=/tmp/redis-{{redis.version}}
+  sudo: yes
+  tags: redis
+
+- name: enable overcommit memory
+  sysctl: name=vm.overcommit_memory value=1
+  notify: restart redis
+  sudo: yes
+  tags: redis
+
+- name: redis group
+  group: name=redis
+  sudo: yes
+  tags: redis
+
+- name: redis user
+  user: name=redis comment='redis deamon' group=redis createhome=no
+  sudo: yes
+  tags: redis
+
+- name: create redis log dir
+  file: path=/var/log/redis state=directory owner=redis group=redis
+  sudo: yes
+  tags: redis
+
+- name: redis log dir
+  copy: dest=/var/log/redis/redis-server.log content='' owner=redis group=redis
+  sudo: yes
+  tags: redis
+
+- name: redis logrotate
+  copy: src=redis-server.logrotate.d dest=/etc/logrotate.d/redis-server
+  sudo: yes
+  tags: redis
+
+- name: redis config directory
+  file: path=/etc/redis state=directory owner=redis group=redis
+  sudo: yes
+  tags: redis
+
+- name: redis config
+  template: src=redis.conf.j2 dest=/etc/redis/redis.conf mode=644
+  notify: restart redis
+  sudo: yes
+  tags:
+    - redis
+    - redis_conf
+
+- name: redis data dir
+  file: path=/var/lib/redis state=directory owner=redis group=redis mode=755
+  sudo: yes
+  tags: redis
+
+- name: redis init file
+  copy: src=redis-server.init dest=/etc/init/redis-server.conf owner=root group=root mode=644
+  notify: restart redis
+  sudo: yes
+  tags:
+  - redis
+  - redis_init
+
+- name: ensure redis is running
+  service: name=redis-server state=running
+  sudo: yes
+  tags: redis
+
+- name: add redis backup script
+  template: src=redis_backup.sh.j2 dest=/root/redis_backup.sh owner=root group=root mode=0700
+  sudo: yes
+  tags:
+  - redis
+  - redis_bk

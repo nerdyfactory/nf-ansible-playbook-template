@@ -1,0 +1,9 @@
+- name: Add shopdogg user
+  user: name=shopdogg group=www-data
+  sudo: yes
+  tags: scraper
+
+- name: Add application directory
+  file: dest=/var/www/shopdogg state=directory owner=shopdogg group=www-data mode=0700
+  sudo: yes
+  tags: scraper

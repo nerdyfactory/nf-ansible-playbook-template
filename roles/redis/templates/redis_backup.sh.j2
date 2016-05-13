@@ -1,0 +1,20 @@
+#!/bin/bash
+
+TODAY=`date +%Y-%m-%d`
+ROTATE_DATE=$(date +%Y-%m-%d --date='1 week ago')
+
+BACKUP_DIR=/var/lib/redis_backups
+{% if redis_password is defined %}REDIS_PASSWORD={{ redis_password }}{% endif %}
+
+mkdir -p $BACKUP_DIR
+
+{% if redis_password is defined %} redis-cli -a $REDIS_PASSWORD BGSAVE {% else %} {% endif %}
+
+cp /var/lib/redis/dump.rdb $BACKUP_DIR/$TODAY-redis-dump.rdb
+gzip $BACKUP_DIR/$TODAY-redis-dump.rdb
+
+#Clean up the copied dump file and archived files older than one week
+if [ -f "$BACKUP_DIR/$ROTATE_DATE-redis-dump.rdb.gz" ]
+then
+  rm $BACKUP_DIR/$ROTATE_DATE-redis-dump.rdb.gz
+fi
