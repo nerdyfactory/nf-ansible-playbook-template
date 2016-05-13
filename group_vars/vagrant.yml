@@ -4,7 +4,6 @@ ubuntu_version: "trusty"
 nginx_worker_processes: "1"
 nginx_vhosts:
  - listen: "80 default_server"
-   server_name: "shopdogg.local"
-   root: "/vagrant/shopdogg-homepage"
+   server_name: "nerdyfactory.local"
+   root: "/var/www/rails_app/current"
    index: "index.html index.htm"
-

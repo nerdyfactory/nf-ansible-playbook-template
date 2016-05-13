@@ -6,4 +6,5 @@
   - role: nginx
   - role: node
   - role: redis
-  - role: scraper
+  - role: app
+  - role: rbenv

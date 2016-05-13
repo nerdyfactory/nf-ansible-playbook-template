@@ -1,61 +1,33 @@
-# Install Node.js using packages crafted by NodeSource
 ---
-- name: Ensure the system can use the HTTPS transport for APT
-  stat:
-    path: /usr/lib/apt/methods/https
-  register: apt_https_transport
-
-- name: Install HTTPS transport for APT
-  apt: 
-    pkg: apt-transport-https
-    state: installed
-  when: not apt_https_transport.stat.exists
-
-- name: Import the NodeSource GPG key into apt
-  apt_key:
-    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
-    state: present
+- name: Install nvm
   become: yes
-  become_user: root
-  tags: node
+  become_user: "{{ nvm.user }}"
+  git: repo=https://github.com/creationix/nvm.git dest=~/.nvm version={{ nvm.version }}
+  tags: nvm
 
-- name: Add NodeSource deb repository
-  apt_repository:
-    repo: 'deb https://deb.nodesource.com/node_{{ nodejs_version }} {{ ansible_distribution_release }} main'
-    state: present
+- name: Source nvm in ~/.profile
   become: yes
-  become_user: root
-  tags: node
+  become_user: "{{ nvm.user }}"
+  lineinfile: >
+    dest=~/.bash_profile
+    line="source ~/.nvm/nvm.sh"
+    create=yes
+  tags: nvm
 
-- name: Add NodeSource deb-src repository
-  apt_repository:
-    repo: 'deb-src https://deb.nodesource.com/node_{{ nodejs_version }} {{ ansible_distribution_release }} main'
-    state: present
-  become: yes
-  become_user: root
-  tags: node
+- name: Install {{ nvm.node_version }}
+  command: sudo -iu {{ nvm.user }} nvm install {{ nvm.node_version }}
+  register: nvm_install_result
+  changed_when: "'is already installed.' not in nvm_install_result.stdout"
+  tags: nvm
 
-- name: Add NodeSource repository preferences
-  template:
-    src: etc/apt/preferences.d/deb_nodesource_com_node.pref.2
-    dest: /etc/apt/preferences.d/deb_nodesource_com_node.pref
-  become: yes
-  become_user: root
-  tags: node
+- name: Check if {{ nvm.node_version }} is the default node version
+  shell: sudo -iu {{ nvm.user }} nvm ls | grep -e 'default -> {{ nvm.node_version }}'
+  register: nvm_check_default
+  changed_when: False
+  ignore_errors: True
+  tags: nvm
 
-- name: Install Node.js
-  apt:
-    pkg:
-      - nodejs
-    state: installed
-    update_cache: yes
-  become: yes
-  become_user: root
-  tags: node
-
-- name: Install global node modules
-  npm: name={{item}} state=present global=yes
-  with_items: nodejs_global_modules
-  become: yes
-  become_user: root
-  tags: npm
+- name: Set default node version to {{ nvm.node_version }}
+  command: sudo -iu {{ nvm.user }} nvm alias default {{ nvm.node_version }}
+  when: nvm_check_default|failed
+  tags: nvm

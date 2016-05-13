@@ -4,6 +4,6 @@ ubuntu_version: "trusty"
 nginx_worker_processes: "2"
 nginx_vhosts:
  - listen: "80 default_server"
-   server_name: "shopdogg.co.kr"
-   root: "/var/www/shopdogg.co.kr/current"
+   server_name: "nerdyfactory.com"
+   root: "/var/www/rails_app/current"
    index: "index.html index.htm"

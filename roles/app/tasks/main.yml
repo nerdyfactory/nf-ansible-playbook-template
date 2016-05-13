@@ -1,0 +1,5 @@
+- name: Add application directory
+  file: dest=/var/www/rails_app state=directory owner=webadm group=www-data mode=0700
+  become: yes
+  become_user: root
+  tags: scraper

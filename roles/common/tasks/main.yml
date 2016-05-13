@@ -1,27 +1,51 @@
 ---
-- name: Update apt
-  apt: update_cache=yes force=yes
-  sudo: yes
+#for ubuntu
+#- name: Update apt
+#  apt: update_cache=yes force=yes
+#  become: yes
+#  become_user: root
+
+#for centos
+- name: Update yum
+  yum: name=* state=latest
+  become: yes
+  become_user: root
 
 - name: Install basic dependencies
-  apt: pkg={{item}} force=yes
-  sudo: yes
+  package: name={{item}} state=present update_cache=yes
+  become: yes
+  become_user: root
   with_items:
-  - build-essential
-  - python-pycurl
+#ubuntu list
+#  - build-essential
+#  - python-pycurl
+#  - curl
+#  - htop
+#  - git
+#  - make
+#  - cmake
+#  - sqlite3
+#  - libsqlite3-dev
+#  - autoconf
+#  - bison
+#  - libssl-dev
+#  - libyaml-dev
+#  - libreadline6
+#  - libreadline6-dev
+#  - zlib1g
+#  - zlib1g-dev
+#  - vim
+
+#centos list
+  - gcc
+  - gcc-c++
+  - make
+  - openssl-devel
   - curl
-  - htop
   - git
   - make
   - cmake
-  - sqlite3
-  - libsqlite3-dev
   - autoconf
   - bison
-  - libssl-dev
-  - libyaml-dev
-  - libreadline6
-  - libreadline6-dev
-  - zlib1g
-  - zlib1g-dev
   - vim
+  - epel-release

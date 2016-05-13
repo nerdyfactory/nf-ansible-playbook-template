@@ -69,7 +69,7 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get install -y apache2
   # SHELL
 	config.vm.provision :ansible do |ansible|
-    ansible.playbook = "vagrant.yml"
+    ansible.playbook = "bootstrap.yml"
     ansible.inventory_path = "vagrant"
     ansible.limit = "vagrant"
   end  

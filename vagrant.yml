@@ -6,4 +6,5 @@
   - role: nginx
   - role: node
   - role: redis
-  - role: zsh
+  - role: rbenv
+  - role: app

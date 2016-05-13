@@ -1,4 +1,4 @@
 pub_keys/*.pub
 **/*.swp
 .vagrant/
-vagrant.retry
+*.retry
