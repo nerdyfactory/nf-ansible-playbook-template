@@ -1,2 +1,2 @@
 [production]
-production ansible_ssh_host=188.166.229.186 ansible_ssh_port=22 env=production user=webadm
+production ansible_ssh_host=128.199.154.192 ansible_ssh_port=22 env=production user=webadm

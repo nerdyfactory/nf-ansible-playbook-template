@@ -11,6 +11,7 @@
   become: yes
   become_user: root
 
+
 - name: Install basic dependencies
   package: name={{item}} state=present update_cache=yes
   become: yes
@@ -49,3 +50,5 @@
   - bison
   - vim
   - epel-release
+  - bzip2
+
