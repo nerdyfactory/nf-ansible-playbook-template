@@ -51,4 +51,5 @@
   - vim
   - epel-release
   - bzip2
+  - postgresql-devel
 

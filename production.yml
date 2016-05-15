@@ -7,4 +7,5 @@
   - role: node
   - role: redis
   - role: app
+  - role: postgresql
   - role: rbenv

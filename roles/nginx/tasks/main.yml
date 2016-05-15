@@ -3,7 +3,9 @@
   set_fact:
     nginx_user: "{{ __nginx_user }}"
   when: nginx_user is not defined
-  tags: nginx
+  tags:
+    - nginx
+    - nginx_conf
 
 - name: Add application directory
   file: dest=/var/www/rails_app state=directory owner=webadm group=www-data mode=755
@@ -29,8 +31,8 @@
   become_user: root
   notify: restart nginx
   tags: 
-  - nginx
-  - nginx_conf
+    - nginx
+    - nginx_conf
 
 - name: Ensure nginx is started and enabled to start at boot.
   service: name=nginx state=started enabled=yes
@@ -58,7 +60,7 @@
 
 - name: Add managed vhost config file (if any vhosts are configured).
   template:
-    src: vhosts.j2
+    src: vhosts.conf
     dest: "{{ nginx_vhost_path }}/vhosts.conf"
     mode: 0644
   when: nginx_vhosts
