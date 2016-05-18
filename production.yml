@@ -9,3 +9,4 @@
   - role: app
   - role: postgresql
   - role: rbenv
+  - role: sidekiq
