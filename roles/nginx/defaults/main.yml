@@ -5,7 +5,7 @@ nginx_default_release: ""
 nginx_conf_path: /etc/nginx/conf.d
 nginx_vhost_path: /etc/nginx/sites-enabled
 nginx_default_vhost_path: /etc/nginx/sites-enabled/default
-__nginx_user: "webadm"
+__nginx_user: "nginx"
 
 #nginx_worker_processes: "2"
 nginx_worker_connections: "1024"

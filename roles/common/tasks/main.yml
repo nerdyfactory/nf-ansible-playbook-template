@@ -52,4 +52,6 @@
   - epel-release
   - bzip2
   - postgresql-devel
+  - ImageMagick
+  - ImageMagick-devel
 
