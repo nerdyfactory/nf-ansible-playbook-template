@@ -6,7 +6,6 @@
   - role: nginx
   - role: node
   - role: redis
-  - role: app
   - role: postgresql
   - role: rbenv
   - role: sidekiq
