@@ -8,3 +8,4 @@
   - role: redis
   - role: postgresql
   - role: rbenv
+  - role: logrotate
