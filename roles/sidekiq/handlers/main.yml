@@ -1,3 +1,0 @@
----
-- name: restart sidekiq
-  shell: /etc/init.d/sidekiq stop && /etc/init.d/sidekiq start

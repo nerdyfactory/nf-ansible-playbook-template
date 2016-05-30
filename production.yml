@@ -8,4 +8,3 @@
   - role: redis
   - role: postgresql
   - role: rbenv
-  - role: sidekiq
