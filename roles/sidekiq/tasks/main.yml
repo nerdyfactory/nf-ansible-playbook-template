@@ -1,5 +1,0 @@
-- name: Copy sidekiq.init file
-  template: src=sidekiq.init.j2 dest=/etc/init.d/sidekiq mode=755
-  become: yes
-  become_user: root
-  tags: sidekiq
