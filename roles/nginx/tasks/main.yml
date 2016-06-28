@@ -1,0 +1,66 @@
+---
+- name: Define nginx_user.
+  set_fact:
+    nginx_user: "{{ __nginx_user }}"
+  when: nginx_user is not defined
+  tags:
+    - nginx
+    - nginx_conf
+
+- name: Update apt cache.
+  package: name=nginx state=latest update_cache=yes
+  become: true
+  become_user: root
+  tags: nginx
+
+# Nginx setup.
+- name: Copy nginx configuration in place.
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  become_user: root
+  notify: restart nginx
+  tags: 
+    - nginx
+    - nginx_conf
+
+- name: Ensure nginx is started and enabled to start at boot.
+  service: name=nginx state=started enabled=yes
+  become: true
+  become_user: root
+  tags: nginx
+
+- name: Remove default nginx vhost config file (if configured).
+  file:
+    path: "{{ nginx_default_vhost_path }}"
+    state: absent
+  when: nginx_remove_default_vhost
+  become: true
+  become_user: root
+  notify: restart nginx
+  tags:
+  - nginx
+  - nginx_conf
+
+- name: create vhosts directory if it's not exist
+  file: dest={{ nginx_vhost_path }} state=directory owner=root group=root mode=755
+  become: true
+  become_user: root
+  tags: nginx
+
+- name: Add managed vhost config file (if any vhosts are configured).
+  template:
+    src: vhosts.conf
+    dest: "{{ nginx_vhost_path }}/vhosts.conf"
+    mode: 0644
+  when: nginx_vhosts
+  become: true
+  become_user: root
+  notify: restart nginx
+  tags:
+  - nginx
+  - nginx_conf

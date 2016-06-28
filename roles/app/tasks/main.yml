@@ -1,0 +1,23 @@
+- name: Add app user
+  user: name=webadm group=www-data
+  become: yes
+  become_user: root
+  tags: app
+
+- name: Add application directory
+  file: dest=/var/www/rails_app state=directory owner=webadm  group=www-data mode=0775
+  become: yes
+  become_user: root
+  tags: app
+
+- name: create postgres user
+  postgresql_user: name=borg password=password role_attr_flags=CREATEDB,NOSUPERUSER
+  become: yes
+  become_user: postgres
+  tags: app
+
+- name: create postgres database
+  postgresql_db: name=borg encoding='UTF-8' owner=borg
+  become: yes
+  become_user: postgres
+  tags: app

@@ -52,26 +52,26 @@
       notify: restart ssh
     - name: Delete /etc/sudoers.d/ files
       command: rm -f /etc/sudoers.d/*
-#    - name: Install packages
-#      action: apt pkg=ufw state=installed
-#    - name: Setup ufw 22/tcp
-#      command: ufw allow 22/tcp
-#    - name: Setup ufw 80/tcp
-#      command: ufw allow 80/tcp
-#    - name: Setup ufw 443/tcp
-#      action: shell ufw allow 443/tcp
-#    - name: Enable ufw
-#      command: echo 'y' | ufw enable
+    - name: Install packages
+      action: apt pkg=ufw state=installed
+    - name: Setup ufw 22/tcp
+      command: ufw allow 22/tcp
+    - name: Setup ufw 80/tcp
+      command: ufw allow 80/tcp
+    - name: Setup ufw 443/tcp
+      action: shell ufw allow 443/tcp
+    - name: Enable ufw
+      command: echo 'y' | ufw enable
     - name: Delete root password
       command: passwd -d root
-#    - name: Generate locale
-#      command: /usr/sbin/locale-gen {{ locale }}
-#    - name: Set locale
-#      command: /usr/sbin/update-locale LANG={{ locale }} LC_ALL={{ locale }} LANGUAGE={{ language }}
+    - name: Generate locale
+      command: /usr/sbin/locale-gen {{ locale }}
+    - name: Set locale
+      command: /usr/sbin/update-locale LANG={{ locale }} LC_ALL={{ locale }} LANGUAGE={{ language }}
     - name: locale setting
       command: "localectl set-locale LANG={{ locale }}"
-#    - name: Set /etc/localtime
-#      command: /bin/cp /usr/share/zoneinfo/{{ timezone }} /etc/localtime
+    - name: Set /etc/localtime
+      command: /bin/cp /usr/share/zoneinfo/{{ timezone }} /etc/localtime
     - name: Set timezone (/etc/timezone)
       copy: content={{ timezone }} dest=/etc/timezone
       notify: update tzdata
