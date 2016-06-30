@@ -2,10 +2,11 @@
 - hosts: production
   user: "{{user}}"
   roles:
-  - role: common 
+  - role: common
   - role: nginx
+  - role: ssl
   - role: node
-  - role: redis
   - role: postgresql
   - role: rbenv
+  - role: app
   - role: logrotate

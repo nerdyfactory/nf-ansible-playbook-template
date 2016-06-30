@@ -11,13 +11,13 @@
   tags: app
 
 - name: create postgres user
-  postgresql_user: name=borg password=password role_attr_flags=CREATEDB,NOSUPERUSER
+  postgresql_user: name={{ app_name }} password={{ db_password }} role_attr_flags=CREATEDB,NOSUPERUSER
   become: yes
   become_user: postgres
   tags: app
 
 - name: create postgres database
-  postgresql_db: name=borg encoding='UTF-8' owner=borg
+  postgresql_db: name={{ app_name }} encoding='UTF-8' owner={{ app_name }}
   become: yes
   become_user: postgres
   tags: app
