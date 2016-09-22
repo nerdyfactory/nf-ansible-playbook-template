@@ -2,4 +2,4 @@
 nvm:
   user: webadm
   version: v0.31.1
-  node_version: 5.9.0
+  node_version: 6.6.0
