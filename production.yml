@@ -4,7 +4,7 @@
   roles:
   - role: common
   - role: nginx
-  - role: ssl
+  #  - role: ssl
   - role: node
   - role: postgresql
   - role: rbenv
