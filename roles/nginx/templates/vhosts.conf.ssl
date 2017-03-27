@@ -19,12 +19,25 @@ server {
     ssl_ciphers HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers on;
 
+    sendfile on;
+    sendfile_max_chunk 1m;
+    access_log off;
+    aio threads;
+
+    gzip on;
+    gzip_types      text/plain text/css application/javascript text/javascript;
+    gzip_proxied    no-cache no-store private expired auth;
+    gzip_min_length 1000;
+
+
     root /var/www/rails_app/current/public;
 
     try_files $uri/index.html $uri @app;
 
-    location ~ /.well-known {
-      allow all;
+    location ~*  \.(jpg|jpeg|png|gif|ico|css|js)$ {
+        tcp_nopush on;
+        tcp_nodelay on;
+        expires 365d;
     }
 
     location @app {

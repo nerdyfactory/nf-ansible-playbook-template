@@ -7,7 +7,7 @@ nginx_vhost_path: /etc/nginx/sites-enabled
 nginx_default_vhost_path: /etc/nginx/sites-enabled/default
 __nginx_user: "www-data"
 
-#nginx_worker_processes: "2"
+nginx_worker_processes: "16"
 nginx_worker_connections: "1024"
 
 nginx_error_log: "/var/log/nginx/error.log warn"
