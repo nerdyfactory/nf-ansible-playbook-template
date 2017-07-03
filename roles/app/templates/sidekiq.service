@@ -24,9 +24,10 @@ After=syslog.target network.target
 # http://0pointer.de/public/systemd-man/systemd.exec.html
 [Service]
 Type=simple
-WorkingDirectory=/opt/myapp/current
+WorkingDirectory=/var/www/rails_app/current
 # If you use rbenv:
- ExecStart=/bin/bash -lc 'bundle exec sidekiq -e production'
+ExecStart=/home/webadm/.rbenv/bin/rbenv exec bundle exec sidekiq -e production
+
 # If you use the system's ruby:
 #ExecStart=/usr/local/bin/bundle exec sidekiq -e production
 User=webadm
