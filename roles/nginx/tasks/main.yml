@@ -54,11 +54,24 @@
 
 - name: Add managed vhost config file (if any vhosts are configured).
   template:
+    src: vhosts.conf
+    dest: "{{ nginx_vhost_path }}/vhosts.conf"
+    mode: 0644
+  when: nginx_vhosts and environment != "production"
+  become: true
+  become_user: root
+  notify: restart nginx
+  tags:
+  - nginx
+  - nginx_conf
+
+- name: Add managed vhost config file (ssl config).
+  template:
     src: vhosts.conf.ssl
     dest: "{{ nginx_vhost_path }}/vhosts.conf"
     mode: 0644
-  when: nginx_vhosts
   become: true
+  when: nginx_vhosts and environment == "production"
   become_user: root
   notify: restart nginx
   tags:
