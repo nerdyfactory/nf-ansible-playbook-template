@@ -9,4 +9,5 @@
   - role: postgresql
   - role: rbenv
   - role: app
+  - role: redis
   - role: logrotate
