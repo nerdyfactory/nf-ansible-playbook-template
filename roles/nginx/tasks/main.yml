@@ -57,7 +57,7 @@
     src: vhosts.conf
     dest: "{{ nginx_vhost_path }}/vhosts.conf"
     mode: 0644
-  when: nginx_vhosts and environment != "production"
+  when: nginx_vhosts and env != "production"
   become: true
   become_user: root
   notify: restart nginx
@@ -71,7 +71,7 @@
     dest: "{{ nginx_vhost_path }}/vhosts.conf"
     mode: 0644
   become: true
-  when: nginx_vhosts and environment == "production"
+  when: nginx_vhosts and env == "production"
   become_user: root
   notify: restart nginx
   tags:
