@@ -21,3 +21,14 @@
   become: yes
   become_user: postgres
   tags: app
+
+- name: Copy sidekiq configuration in place.
+  template:
+    src: sidekiq.service
+    dest: /lib/systemd/system/sidekiq.service
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  become_user: root
+  tags: app

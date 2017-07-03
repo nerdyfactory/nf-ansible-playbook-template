@@ -1,2 +1,3 @@
 [vagrant]
-vagrant ansible_ssh_host=192.168.50.10 env=dev user=webadm ansible_ssh_pass=vagrant ansible_ssh_user=vagrant
+vagrant ansible_ssh_host=192.168.50.10 env=dev user=webadm ansible_ssh_user=webadm
+#vagrant ansible_ssh_host=192.168.50.10 env=dev user=ubuntu ansible_ssh_user=ubuntu
