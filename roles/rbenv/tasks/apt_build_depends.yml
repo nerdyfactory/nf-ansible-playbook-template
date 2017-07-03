@@ -1,8 +1,7 @@
 - name: update apt cache
-  apt: update_cache=yes
+  apt: update_cache=yes cache_valid_time=86400
   become: true
-  tags:
-    - rbenv
+  changed_when: false
 
 - name: install build depends
   apt: pkg={{ item }} state=present install_recommends=no
@@ -17,6 +16,23 @@
     - libxslt1-dev
     - zlib1g-dev
   become: true
-  tags:
-    - rbenv
 
+- name: install extra build depends
+  apt: pkg={{ item }} state=present install_recommends=no
+  with_items: '{{ rbenv_extra_depends }}'
+  become: true
+
+- shell: "echo '{{ rbenv.rubies | map(attribute='version') | join(' ') }}' | grep '1.8.7'"
+  ignore_errors: yes
+  register: ruby_version_1_8_7
+  changed_when: false
+
+- name: Install packages required to build Ruby 1.8.7
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - bison
+    - autoconf
+    - subversion
+  when: ruby_version_1_8_7.rc == 0
