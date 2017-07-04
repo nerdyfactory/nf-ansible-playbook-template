@@ -46,7 +46,7 @@ server {
 
     root /var/www/rails_app/current/public;
 
-    try_files $uri/index.html $uri @app;
+    try_files $uri @app;
 
     location ~*  \.(jpg|jpeg|png|gif|ico|css|js|svg|xml)$ {
         tcp_nopush on;
@@ -56,8 +56,11 @@ server {
 
     location @app {
         proxy_pass http://app;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Ssl on; # Optional
+        proxy_set_header X-Forwarded-Port $server_port;
         proxy_redirect off;
     }
 
