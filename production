@@ -1,2 +1,2 @@
 [production]
-production ansible_ssh_host=128.199.239.45 ansible_ssh_port=22 env=production user=webadm ansible_ssh_pass=password ansible_ssh_user=webadm
+production ansible_ssh_host=someipaddress ansible_ssh_port=22 env=production user=webadm ansible_ssh_pass=somepassword ansible_ssh_user=root ansible_python_interpreter=/usr/bin/python3

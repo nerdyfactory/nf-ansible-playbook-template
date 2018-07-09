@@ -42,7 +42,6 @@
       authorized_key: user={{admin_user}} key="{{ item  }}"
       with_file:
         - "pub_keys/jonghun.pub"
-        - "pub_keys/vinay.pub"
       tags: pub_keys
     - name: Disallow password authentication
       action: lineinfile dest=/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
