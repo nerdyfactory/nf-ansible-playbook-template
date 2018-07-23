@@ -5,7 +5,7 @@
   become_user: root
 
   vars:
-    - locale: 'ko_KR.UTF-8'
+    - locale: 'en_us.utf-8'
     - language: 'en_US:en'
     - timezone: 'Asia/Seoul'
     - admin_user: 'webadm'
