@@ -2,9 +2,9 @@
 rbenv:
   env: user
   version: v1.0.0
-  default_ruby: 2.3.3
+  default_ruby: 2.5.3
   rubies:
-    - version: 2.3.3
+    - version: 2.5.3
 
 rbenv_clean_up: false
 
