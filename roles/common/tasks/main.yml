@@ -23,7 +23,6 @@
   - bison
   - libssl-dev
   - libyaml-dev
-    #- libreadline6
   - libreadline6-dev
   - zlib1g
   - zlib1g-dev
