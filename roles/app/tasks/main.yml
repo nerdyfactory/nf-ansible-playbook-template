@@ -1,0 +1,11 @@
+---
+- name: Create a working directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "02755"
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+  with_items: "{{ app_path_list }}"
+  become: true
+  tags: app

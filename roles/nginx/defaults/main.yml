@@ -1,0 +1,6 @@
+---
+nginx_worker_connections: "1024"
+
+nginx_base_path: /etc/nginx
+nginx_root: /var/www/html
+nginx_vhost_template: vhosts.conf.j2

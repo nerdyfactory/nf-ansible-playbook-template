@@ -1,0 +1,56 @@
+---
+- hosts: bootstrap
+  remote_user: "{{ remote_user }}"
+  become: yes
+  become_user: root
+
+  tasks:
+    - name: create admin group
+      group:
+        name: "{{ item }}"
+      with_items:
+        - admin
+        - www-data
+    - name: add admin user
+      user:
+        name: "{{ admin_user }}"
+        state: present
+        shell: /bin/bash
+        groups: www-data,admin
+    - name: copy /etc/sudoers
+      command: cp -f /etc/sudoers /etc/sudoers.tmp
+    - name: backup sudoers file
+      command: cp -f /etc/sudoers /etc/sudoers.bak
+    - name: add admin group to sudoers
+      lineinfile: "dest=/etc/sudoers.tmp line='admin' state=present"
+    - name: add admin group to sudo nopasswd
+      lineinfile: "dest=/etc/sudoers.tmp state=present regexp=^admin line='%admin ALL=(ALL) NOPASSWD: ALL'"
+    - name: add ssh-agent to sudo
+      lineinfile: dest=/etc/sudoers.tmp state=present regexp="^Defaults env_keep\+\=SSH_AUTH_SOCK" line="Defaults env_keep+=SSH_AUTH_SOCK"
+    - name: final sudoers check
+      raw: "visudo -q -c -f /etc/sudoers.tmp && cp -f /etc/sudoers.tmp /etc/sudoers"
+    - name: add our ssh public keys
+      authorized_key:
+        user: "{{ admin_user }}"
+        key: "{{ item  }}"
+      with_file:
+        - pub_keys/jonghun.pub
+        - pub_keys/jonghun2.pub
+        - pub_keys/ameer.pub
+      tags: pub_keys
+    - name: Disallow password authentication
+      action: lineinfile dest=/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
+      notify: restart ssh
+    - name: Disallow root SSH access
+      action: lineinfile dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
+      notify: restart ssh
+    - name: Delete /etc/sudoers.d/ files
+      file:
+        path: /etc/sudoers.d/
+        state: absent
+    - name: Delete root password
+      command: passwd -d root
+
+  handlers:
+    - name: restart ssh
+      action: service name=ssh state=restarted

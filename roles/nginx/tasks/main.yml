@@ -1,0 +1,85 @@
+---
+- name: Stop service apache2, if started
+  service:
+    name: apache2
+    state: stopped
+    enabled: no
+  become: yes
+  ignore_errors: true
+  tags: nginx
+
+- name: Update apt cache.
+  package:
+    name: nginx
+    state: latest
+    update_cache: yes
+  become: yes
+  tags: nginx
+
+- name: Copy nginx configuration in place.
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+  notify: restart nginx
+  tags:
+    - nginx
+    - nginx_conf
+
+- name: Remove default nginx vhost config file (if configured).
+  file:
+    path: "{{ nginx_base_path }}/sites-enabled/{{ item }}"
+    state: absent
+  become: yes
+  notify: restart nginx
+  with_items:
+    - default
+  tags:
+    - nginx
+    - nginx_conf
+
+- name: create vhosts directory if it's not exist
+  file:
+    path: "{{ nginx_base_path }}/{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - sites-enabled
+    - sites-available
+  become: yes
+  tags: nginx
+
+- name: Add managed vhost config file
+  template:
+    src: "{{ nginx_vhost_template }}"
+    dest: "{{ nginx_base_path }}/sites-available/vhosts.conf"
+    mode: 0644
+  become: yes
+  notify: restart nginx
+  tags:
+    - nginx
+    - nginx_conf
+
+- name: Symlink vhost config file
+  file:
+    src: "{{ nginx_base_path }}/sites-available/vhosts.conf"
+    dest: "{{ nginx_base_path }}/sites-enabled/vhosts.conf"
+    state: link
+  become: yes
+  notify: restart nginx
+  tags:
+    - nginx
+    - nginx_conf
+
+- name: Ensure nginx is started and enabled to start at boot.
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+  become: yes
+  tags: nginx

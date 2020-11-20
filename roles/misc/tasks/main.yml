@@ -1,0 +1,21 @@
+---
+- name: Installing tmux
+  apt:
+    pkg: tmux,xclip
+    state: latest
+  become: true
+  tags: misc
+
+- name: Add tmux config
+  template:
+    src: tmux.conf
+    dest: ~/.tmux.conf
+  tags: misc
+
+- name: Install util tools
+  package:
+    name: silversearcher-ag
+    state: latest
+    update_cache: yes
+  become: true
+  tags: misc

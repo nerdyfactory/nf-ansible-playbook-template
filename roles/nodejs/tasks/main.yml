@@ -1,0 +1,48 @@
+---
+- name: Install dependencies for native addons
+  package:
+    name: gcc,g++,make
+    state: latest
+    update_cache: yes
+  become: yes
+  tags: nodejs
+
+- name: Install the nodejs LTS repos
+  shell: curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+  args:
+    creates: /etc/apt/sources.list.d/nodesource.list
+  become: yes
+  tags: nodejs
+
+- name: Install nodejs package
+  package:
+    name: nodejs
+    state: latest
+  become: yes
+  tags: nodejs
+
+- name: Install node.js package globally.
+  npm:
+    name: "{{ item }}"
+    global: yes
+  become: yes
+  tags: nodejs
+  with_items: "{{ nodejs_package_list }}"
+
+- name: Add pm2 systemd config
+  template:
+    src: pm2.service.j2
+    dest: "/etc/systemd/system/pm2-{{ remote_user }}.service"
+    mode: 0644
+  notify: restart pm2
+  become: yes
+  tags: nodejs
+
+- name: Start and enable pm2 service
+  service:
+    daemon_reload: yes
+    name: "pm2-{{ remote_user }}"
+    state: started
+    enabled: yes
+  become: yes
+  tags: nodejs
