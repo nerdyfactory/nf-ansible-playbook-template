@@ -1,0 +1,6 @@
+---
+- name: restart pm2
+  service:
+    name: "pm2-{{ remote_user }}"
+    state: restarted
+  become: yes

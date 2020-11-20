@@ -1,0 +1,31 @@
+---
+- name: Generate locale
+  locale_gen:
+    name: "{{ locale }}"
+    state: present
+  become: yes
+  become_user: root
+
+- name: Set locale
+  command: /usr/sbin/update-locale LANG={{ locale }} LC_ALL={{ locale }} LANGUAGE={{ language }}
+  become: yes
+  become_user: root
+
+- name: locale setting
+  command: "localectl set-locale LANG={{ locale }}"
+  become: yes
+  become_user: root
+
+- name: Set /etc/localtime
+  file:
+    src: /usr/share/zoneinfo/{{ timezone }}
+    dest: /etc/localtime
+    state: link
+  become: yes
+  become_user: root
+
+- name: Set timezone (/etc/timezone)
+  copy: content={{ timezone }} dest=/etc/timezone
+  become: yes
+  become_user: root
+  notify: update tzdata

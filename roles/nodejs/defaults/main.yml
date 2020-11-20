@@ -1,0 +1,4 @@
+---
+nodejs_package_list:
+  - pm2
+  - yarn

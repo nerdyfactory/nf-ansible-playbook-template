@@ -1,0 +1,10 @@
+---
+- hosts: all
+  remote_user: "{{ remote_user }}"
+  roles:
+    - locale
+    - ohmyzsh
+    - misc
+    - nodejs
+    - nginx
+    - app

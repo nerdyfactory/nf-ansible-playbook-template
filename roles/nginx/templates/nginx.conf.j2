@@ -1,54 +1,85 @@
-user  {{ nginx_user }};
-
-error_log  {{ nginx_error_log }};
-pid        /var/run/nginx.pid;
-
-worker_processes  {{ nginx_worker_processes }};
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+include /etc/nginx/modules-enabled/*.conf;
 
 events {
-    worker_connections  {{ nginx_worker_connections }};
+  worker_connections  {{ nginx_worker_connections }};
+	# multi_accept on;
 }
 
 http {
-    include       /etc/nginx/mime.types;
-    default_type  application/octet-stream;
 
-    server_names_hash_bucket_size 64;
+	##
+	# Basic Settings
+	##
 
-    client_max_body_size {{ nginx_client_max_body_size }};
+	sendfile on;
+	tcp_nopush on;
+	tcp_nodelay on;
+	keepalive_timeout 65;
+	types_hash_max_size 2048;
+	# server_tokens off;
 
-    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
-                      '$status $body_bytes_sent "$http_referer" '
-                      '"$http_user_agent" "$http_x_forwarded_for"';
+	# server_names_hash_bucket_size 64;
+	# server_name_in_redirect off;
 
-    access_log  {{ nginx_access_log }};
+	include /etc/nginx/mime.types;
+	default_type application/octet-stream;
 
-    sendfile        {{ nginx_sendfile }};
-    tcp_nopush      {{ nginx_tcp_nopush }};
-    tcp_nodelay     {{ nginx_tcp_nodelay }};
+	##
+	# SSL Settings
+	##
 
-    keepalive_timeout  {{ nginx_keepalive_timeout }};
-    keepalive_requests {{ nginx_keepalive_requests }};
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
+	ssl_prefer_server_ciphers on;
 
-    #gzip  on;
+	##
+	# Logging Settings
+	##
 
-{% if nginx_proxy_cache_path %}
-    proxy_cache_path {{ nginx_proxy_cache_path }};
-{% endif %}
+	access_log /var/log/nginx/access.log;
+	error_log /var/log/nginx/error.log info;
 
-{% for upstream in nginx_upstreams %}
-    upstream {{ upstream.name }} {
-{% if upstream.strategy is defined %}
-        {{ upstream.strategy }};
-{% endif %}
-{% for server in upstream.servers %}
-        server {{ server }};
-{% endfor %}
-    }
-{% endfor %}
+	##
+	# Gzip Settings
+	##
 
-    include {{ nginx_conf_path }}/*.conf;
-{% if nginx_conf_path != nginx_vhost_path %}
-    include {{ nginx_vhost_path }}/*.conf;
-{% endif %}
+	gzip on;
+
+	gzip_vary on;
+	gzip_proxied any;
+	gzip_comp_level 6;
+	gzip_buffers 16 8k;
+	gzip_http_version 1.1;
+	gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+	##
+	# Virtual Host Configs
+	##
+
+	include /etc/nginx/conf.d/*.conf;
+	include /etc/nginx/sites-enabled/*;
 }
+
+
+#mail {
+#	# See sample authentication script at:
+#	# http://wiki.nginx.org/ImapAuthenticateWithApachePhpScript
+# 
+#	# auth_http localhost/auth.php;
+#	# pop3_capabilities "TOP" "USER";
+#	# imap_capabilities "IMAP4rev1" "UIDPLUS";
+# 
+#	server {
+#		listen     localhost:110;
+#		protocol   pop3;
+#		proxy      on;
+#	}
+# 
+#	server {
+#		listen     localhost:143;
+#		protocol   imap;
+#		proxy      on;
+#	}
+#}

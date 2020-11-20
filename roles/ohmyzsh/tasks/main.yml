@@ -1,0 +1,26 @@
+---
+- name: Installing Zsh and git
+  apt:
+    pkg: zsh,git
+    state: latest
+  become: true
+  tags: ohmyzsh
+
+- name: Cloning  oh-my-zsh
+  git:
+    repo: https://github.com/robbyrussell/oh-my-zsh
+    dest: ~/.oh-my-zsh
+  tags: ohmyzsh
+
+- name: Creating new ~/.zshrc
+  copy:
+    src: ~/.oh-my-zsh/templates/zshrc.zsh-template
+    dest: ~/.zshrc
+  tags: ohmyzsh
+
+- name: set default shell for users
+  become: yes
+  user:
+    name: "{{ remote_user }}"
+    shell: /bin/zsh
+  tags: ohmyzsh

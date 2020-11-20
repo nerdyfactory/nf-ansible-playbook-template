@@ -1,0 +1,4 @@
+---
+app_path_list:
+app_owner: webadm
+app_group: www-data

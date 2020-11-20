@@ -1,5 +1,0 @@
----
-app_name: "borg"
-db_password: "password"
-nginx_worker_processes: "4"
-domain: 'borg.visionxusa.com'

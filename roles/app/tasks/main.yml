@@ -1,34 +1,11 @@
-- name: Add app user
-  user: name=webadm group=www-data
-  become: yes
-  become_user: root
-  tags: app
-
-- name: Add application directory
-  file: dest=/var/www/rails_app state=directory owner=webadm  group=www-data mode=0775
-  become: yes
-  become_user: root
-  tags: app
-
-- name: create postgres user
-  postgresql_user: name={{ app_name }} password={{ db_password }} role_attr_flags=CREATEDB,NOSUPERUSER
-  become: yes
-  become_user: postgres
-  tags: app
-
-- name: create postgres database
-  postgresql_db: name={{ app_name }} encoding='UTF-8' owner={{ app_name }}
-  become: yes
-  become_user: postgres
-  tags: app
-
-- name: Copy sidekiq configuration in place.
-  template:
-    src: sidekiq.service
-    dest: /lib/systemd/system/sidekiq.service
-    owner: root
-    group: root
-    mode: 0644
+---
+- name: Create a working directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "02755"
+    owner: "{{ app_owner }}"
+    group: "{{ app_group }}"
+  with_items: "{{ app_path_list }}"
   become: true
-  become_user: root
   tags: app

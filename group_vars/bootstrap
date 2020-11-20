@@ -1,0 +1,4 @@
+---
+#remote_user: root
+admin_user: webadm
+#ansible_ssh_pass: yourpassword
