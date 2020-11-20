@@ -1,9 +1,0 @@
----
-- name: logrotate for log files
-  template: src=logrotate.conf.j2 dest=/etc/logrotate.d/{{item.service}}
-  with_items:
-    - service: "weys_log"
-      path: "/var/www/rails_app/shared/log/*.log /var/www/rails_app/shared/log/*.output"
-  become: yes
-  become_user: root
-  tags: logrotate

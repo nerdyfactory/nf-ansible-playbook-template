@@ -1,6 +1,0 @@
-[production]
-# for bootstrapping
-#production ansible_ssh_host=someipaddress ansible_ssh_port=22 env=production user=root ansible_ssh_pass=somepassword ansible_ssh_user=root ansible_python_interpreter=/usr/bin/python3
-
-# for provisioning
-production ansible_ssh_host=someipaddress ansible_ssh_port=22 env=production user=webadm ansible_ssh_user=webadm
