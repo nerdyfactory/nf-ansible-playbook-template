@@ -1,5 +1,5 @@
 [servers]
-server_1 ansible_host=yourserverip
+server_1 ansible_host=yourserverip db_name=yourdbname db_user=yourdbuser db_pass=yourdbpass
 
 [bootstrap:children]
 servers

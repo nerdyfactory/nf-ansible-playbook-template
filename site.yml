@@ -2,9 +2,24 @@
 - hosts: all
   remote_user: "{{ remote_user }}"
   roles:
-    - locale
-    - ohmyzsh
-    - misc
-    - nodejs
-    - nginx
-    - app
+    - role: locale
+      tags:
+        - locale
+    - role: ohmyzsh
+      tags:
+        - ohmyzsh
+    - role: misc
+      tags:
+        - misc
+    - role: nodejs
+      tags:
+        - nodejs
+    - role: nginx
+      tags:
+        - nginx
+    - role: app
+      tags:
+        - app
+    - role: postgres
+      tags:
+        - postgres
